@@ -1,24 +1,24 @@
-#! /bin/bash
+#!/bin/bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 ###export###
 export PATH
-export FRPS_VER=0.27.0
-export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frp-onekey/master/frps.init"
-export aliyun_download_url="https://code.aliyun.com/MvsCode/frp-onekey/raw/master"
+export FRPS_VER=0.34.0
+export FRPS_INIT="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/frps.init"
+export aliyun_download_url="https://code.aliyun.com/mvscode/frps-onekey/raw/master"
 export github_download_url="https://github.com/fatedier/frp/releases/download"
 #======================================================================
-#   System Required:  CentOS Debian or Ubuntu (32bit/64bit)
+#   System Required:  CentOS Debian Ubuntu or Fedora(32bit/64bit)
 #   Description:  A tool to auto-compile & install frps on Linux
-#   Author: Clang
-#   Mender：MvsCode
+#   Author : Clang
+#   Mender : MvsCode
 #======================================================================
 program_name="frps"
-version="19.4.25"
+version="200920"
 str_program_dir="/usr/local/${program_name}"
 program_init="/etc/init.d/${program_name}"
 program_config_file="frps.ini"
 ver_file="/tmp/.frp_ver.sh"
-str_install_shell="https://raw.githubusercontent.com/MvsCode/frp-onekey/master/install-frps.sh"
+str_install_shell="https://raw.githubusercontent.com/MvsCode/frps-onekey/master/install-frps.sh"
 shell_update(){
     fun_clangcn "clear"
     echo "Check updates for shell..."
@@ -38,7 +38,6 @@ shell_update(){
                 echo
                 echo -e "${COLOR_GREEN}Please Re-run${COLOR_END} ${COLOR_PINK}$0 ${clang_action}${COLOR_END}"
                 echo
-                exit 1
             fi
             exit 1
         fi
@@ -86,12 +85,14 @@ get_char(){
 }
 # Check OS
 checkos(){
-    if  grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
+    if   grep -Eqi "CentOS" /etc/issue || grep -Eq "CentOS" /etc/*-release; then
         OS=CentOS
     elif grep -Eqi "Debian" /etc/issue || grep -Eq "Debian" /etc/*-release; then
         OS=Debian
     elif grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release; then
         OS=Ubuntu
+    elif grep -Eqi "Fedora" /etc/issue || grep -Eq "Fedora" /etc/*-release; then
+        OS=Fedora
     else
         echo "Not support OS, Please reinstall OS and retry!"
         exit 1
@@ -129,7 +130,7 @@ check_os_bit(){
 }
 check_centosversion(){
 if centosversion 5; then
-    echo "Not support CentOS 5.x, please change to CentOS 6,7 or Debian or Ubuntu and try again."
+    echo "Not support CentOS 5.x, please change to CentOS 6,7 or Debian or Ubuntu or Fedora and try again."
     exit 1
 fi
 }
@@ -814,8 +815,8 @@ update_program_server_clang(){
         checkos
         check_centosversion
         check_os_bit
-    fun_get_version
-        remote_init_version=`wget  -qO- ${FRPS.INIT} | sed -n '/'^version'/p' | cut -d\" -f2`
+    fun_getVer
+        remote_init_version=`wget  -qO- ${FRPS_INIT} | sed -n '/'^version'/p' | cut -d\" -f2`
         local_init_version=`sed -n '/'^version'/p' ${program_init} | cut -d\" -f2`
         install_shell=${strPath}
         if [ ! -z ${remote_init_version} ];then
